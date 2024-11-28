@@ -1,0 +1,4 @@
+{"scripts": {
+  "start": "yarn nx serve auth-service"
+}
+}

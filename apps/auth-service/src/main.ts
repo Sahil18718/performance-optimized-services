@@ -15,12 +15,12 @@ const PORT = process.env.PORT || 3001;
 app.use(morgan('combined'));
 
 app.use(express.json());
-app.use('/scam', authRoutes);
+app.use('/auth', authRoutes);
 
 const startServer = async () => {
   await connectToDatabase(process.env.MONGO_URI || '');
   await connectToRedis();
-  app.listen(PORT, () => console.log(`Scam service running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`auth service running on port ${PORT}`));
 };
 
 startServer();

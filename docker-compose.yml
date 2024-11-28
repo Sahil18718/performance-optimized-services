@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: auth-service
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/auth_service_db
+      - JWT_SECRET=your_secret_key
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - mongo
+      - redis
+
+  scam-service:
+    build:
+      context: .
+      dockerfile: ./apps/scam-service/Dockerfile
+    ports:
+      - "3001:3001"
+    container_name: scam-service
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/scam_service_db
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
