@@ -3,6 +3,15 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "start:auth-service": "yarn nx serve auth-service",
+    "start:scam-service": "yarn nx serve scam-service",
+    "start:both": "concurrently \"yarn start:auth-service\" \"yarn start:scam-service\"",
+    "lint": "nx run-many --targets=lint --fix",
+    "test": "nx run scam-service:test",
+    "build": "nx run-many --targets=build",
+    "start:docker": "docker-compose up --build"
+  },
   "dependencies": {
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
@@ -13,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2",
     "morgan": "^1.10.0",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -32,6 +42,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.9.3",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^9.1.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",

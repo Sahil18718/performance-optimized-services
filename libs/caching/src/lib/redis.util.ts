@@ -11,7 +11,7 @@ export const connectToRedis = async () => {
   console.log('Connected to Redis');
 };
 
-export const setCache = async (key: string, value: any, ttl: number = 3600) => {
+export const setCache = async (key: string, value: any, ttl = 3600) => {
   await client.set(key, JSON.stringify(value), {
     EX: ttl,
   });

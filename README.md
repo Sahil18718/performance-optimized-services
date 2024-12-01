@@ -1,82 +1,152 @@
-# PerformanceOptimizedServices
+# Performance Optimized Services
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This repository contains two services:
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
-
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Finish your CI setup
-
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/zm1RtyTZbK)
+1. **Auth Service**: Handles user registration, login, and token verification.
+2. **Scam Reporting Service**: Allows users to report scams and check the status of a scam.
 
 
-## Run tasks
+### Table of Contents
+- [Project Setup](#project-setup)
+- [Available Scripts](#available-scripts)
+- [Endpoints](#endpoints)
+- [What We Have Done](#what-we-have-done)
 
-To run the dev server for your app, use:
+---
 
-```sh
-npx nx serve performance-optimized-services
+## Project Setup
+
+To get started with the project, first clone the repository:
+
+```bash
+git clone https://github.com/your-repo/performance-optimized-services.git
+cd performance-optimized-services
 ```
 
-To create a production bundle:
+## Install dependencies:
 
-```sh
-npx nx build performance-optimized-services
+```bash
+yarn install
 ```
 
-To see all available targets to run for a project, run:
+## Available Scripts
 
-```sh
-npx nx show project performance-optimized-services
+You can run the following commands to manage the application:
+### Start auth-service:
+```bash
+yarn start:auth-service
+```
+Starts the auth-service using Nx.
+
+
+### Start scam-service:
+```bash
+yarn start:scam-service
+```
+Starts the scam-service using Nx.
+
+### Start both services concurrently:
+```bash
+yarn start:both
+```
+Runs both the auth-service and scam-service concurrently using concurrently package.
+
+### Lint the project:
+```bash
+yarn lint
+```
+Runs linting on the entire project and fixes the issues automatically.
+
+### Run tests:
+
+```bash
+yarn test
+```
+Runs tests 
+
+### Build the project:
+
+```bash
+yarn build
+```
+Builds all the services in the project.
+
+
+### Start services using Docker:
+
+```bash
+yarn start:docker
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Endpoints
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### **Auth Service Endpoints**
 
-## Add new projects
+- **POST /auth/register**
+    - Register a new user.
+    - **Body**: `{ "email": "user@example.com", "password": "securepassword" }`
+    - **Response**: `201 Created` or `409 Conflict` if the user already exists.
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+- **POST /auth/login**
+    - Authenticate a user and get a token.
+    - **Body**: `{ "email": "user@example.com", "password": "securepassword" }`
+    - **Response**: `200 OK` with JWT Token or `401 Unauthorized` if credentials are incorrect.
 
-Use the plugin's generator to create new projects.
+- **POST /auth/verify**
+    - Verify the validity of a JWT token.
+    - **Body**: `{ "token": "jwt_token_here" }`
+    - **Response**: `{ "isValid": true/false }`.
 
-To generate a new application, use:
+- **GET /auth/get**
+    - Test if the Auth service is running.
+    - **Response**: `200 OK` with `{ message: "Auth services app is running fine" }`.
 
-```sh
-npx nx g @nx/node:app demo
-```
+---
 
-To generate a new library, use:
+### **Scam Reporting Endpoints**
 
-```sh
-npx nx g @nx/node:lib mylib
-```
+- **POST /scam/report-scam**
+    - Report a new scam.
+    - **Body**: `{ "type": "Phishing", "value": "test@example.com", "details": "Phishing attempt via email" }`
+    - **Response**: `201 Created` or `200 OK` if the scam already exists.
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+- **GET /scam/scam-list**
+    - Retrieve the list of top 10 most reported scams.
+    - **Response**: `200 OK` with the list of scams sorted by report count.
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **GET /scam/scam-status**
+    - Check if a value (e.g., email, phone number) is associated with a known scam.
+    - **Query Params**: `value=<scam_value>`
+    - **Response**: `200 OK` with `{ isScam: true/false, reports: <number> }`
 
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-## Install Nx Console
+## What We Have Done
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+### 1. **Auth Service**
+- **User Registration**: Allows new users to register by providing an email and password.
+- **Login & Authentication**: Verifies user credentials and generates a JWT token for authenticated sessions.
+- **Token Verification**: Validates the JWT token to ensure a user is authenticated.
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### 2. **Scam Reporting Service**
+- **Report Scam**: Users can report a new scam or update an existing scam.
+- **Scam Status**: Checks if a specific value (email, phone, etc.) is associated with a scam and returns the status.
+- **Scam List**: Fetches a list of the top 10 most reported scams.
 
-## Useful links
+### 3. **Redis Integration**
+- **Caching**: Utilizes Redis to cache scam statuses for quicker responses.
+- **Connection**: Services are connected to Redis using Docker for caching purposes.
 
-Learn more:
+### 4. **MongoDB Integration**
+- **Persistent Data**: MongoDB is used to store user and scam-related data persistently.
+- **Error Handling**: Proper error handling and status codes for both services to provide feedback.
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### 5. **Docker Support**
+- **Docker-Compose**: The services can be run and built using Docker for easy deployment and scalability.
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### 6. **Concurrency Support**
+- **Run Both Services**: Using concurrently, both services can be run at the same time for development purposes.
+
+
+
+

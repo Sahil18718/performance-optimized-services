@@ -3,6 +3,14 @@ import bcrypt from 'bcrypt';
 import { User } from '../model/user.model';
 import { generateToken, verifyToken } from '../utils/jwt.util';
 
+export const get = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.status(201).send({ message: 'Auth services app is running find' });
+  } catch (error) {
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+};
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
